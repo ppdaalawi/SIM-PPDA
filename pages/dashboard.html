@@ -1,0 +1,59 @@
+<div class="mb-2">
+    <h2 style="color: var(--primary-dark);">Dashboard Overview</h2>
+    <p style="color: var(--text-grey);">Selamat datang di Panel Admin SIM PPDA.</p>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+    
+    <!-- Kartu Info 1 -->
+    <div class="card" style="border-left: 5px solid var(--primary-main);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <small style="color: var(--text-grey);">Status Sistem</small>
+                <h3 style="margin: 5px 0;">Online</h3>
+            </div>
+            <i class="fa-solid fa-server fa-2x" style="color: #e0e0e0;"></i>
+        </div>
+    </div>
+
+    <!-- Kartu Info 2 -->
+    <div class="card" style="border-left: 5px solid #2196F3;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <small style="color: var(--text-grey);">Data Santri</small>
+                <h3 style="margin: 5px 0;">External DB</h3>
+            </div>
+            <i class="fa-solid fa-users fa-2x" style="color: #e0e0e0;"></i>
+        </div>
+        <small style="font-size: 11px; color: #999;">Data diambil dari Sheet Terpisah</small>
+    </div>
+
+    <!-- Kartu Info 3 -->
+    <div class="card" style="border-left: 5px solid #FF9800;">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <small style="color: var(--text-grey);">Pendaftaran</small>
+                <h3 style="margin: 5px 0;">CLOSED</h3>
+            </div>
+            <i class="fa-solid fa-door-closed fa-2x" style="color: #e0e0e0;"></i>
+        </div>
+    </div>
+
+</div>
+
+<div class="card mt-2">
+    <div class="card-header">
+        <i class="fa-solid fa-info-circle"></i> Informasi Cepat
+    </div>
+    <p>Sistem ini menggunakan arsitektur Single Page Application (SPA) dengan sumber data Google Spreadsheet. Anda dapat menambahkan menu baru melalui halaman <b>Pengaturan Sistem</b>.</p>
+</div>
+
+<!-- Script Kecil untuk Dashboard -->
+<script>
+    // Ambil nama user dari localStorage yang disimpan saat login
+    const user = JSON.parse(localStorage.getItem('ppda_user'));
+    if(user) {
+        // Bisa dipakai untuk menyapa
+        console.log("Halo " + user.nama);
+    }
+</script>

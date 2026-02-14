@@ -1,0 +1,209 @@
+<style>
+    /* CSS Khusus Settings */
+    .settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    @media (max-width: 768px) { .settings-grid { grid-template-columns: 1fr; } }
+
+    .settings-card {
+        background: var(--white); padding: 20px; border-radius: 12px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.05); border: 1px solid #f0f0f0;
+    }
+    .settings-card h4 { color: var(--primary-dark); }
+
+    /* iOS Toggle */
+    .ios-switch { position: relative; display: inline-block; width: 52px; height: 32px; }
+    .ios-switch input { opacity: 0; width: 0; height: 0; }
+    .ios-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+    .ios-slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+    input:checked + .ios-slider { background-color: var(--primary-main); }
+    input:checked + .ios-slider:before { transform: translateX(20px); }
+
+    /* Modal Profesional */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); backdrop-filter: blur(5px); display: flex; justify-content: center; align-items: center; z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; }
+    .modal-overlay.active { opacity: 1; pointer-events: all; }
+    .modal-box { background: white; width: 90%; max-width: 400px; padding: 0; border-radius: 12px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); overflow: hidden; transform: scale(0.95); transition: transform 0.3s ease; }
+    .modal-overlay.active .modal-box { transform: scale(1); }
+    .modal-header { display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; background: #f8f9fa; border-bottom: 1px solid #eaeaea; }
+    .modal-header span { font-weight: 700; color: var(--primary-dark); font-size: 16px; }
+    .close-modal { cursor: pointer; font-size: 20px; color: #aaa; transition: color 0.2s; line-height: 1; }
+    .close-modal:hover { color: var(--danger); }
+    .modal-body { padding: 20px; }
+
+    /* Table Styling */
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 13px; }
+    th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid #f5f5f5; vertical-align: middle; }
+    
+    /* Icon Item Picker */
+    .icon-item { padding: 10px; text-align: center; cursor: pointer; border-radius: 6px; transition: 0.2s; font-size: 1.2rem; }
+    .icon-item:hover { background: var(--primary-bg); color: var(--primary-main); }
+
+    /* CSS untuk Segment Button (Toggle Internal/External) */
+    .segment-container { display: flex; background: #f0f0f0; border-radius: 8px; padding: 3px; margin-top: 10px; }
+    .segment-btn {
+        flex: 1; border: none; background: transparent; padding: 8px 12px; cursor: pointer;
+        border-radius: 6px; font-weight: 600; color: var(--text-grey); transition: all 0.3s;
+        font-size: 13px;
+    }
+    .segment-btn.active {
+        background: var(--white); color: var(--primary-dark); box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+        /* CSS untuk Modal Konfirmasi (Agak Lebar & Rapi) */
+    .confirm-modal-overlay .modal-box {
+        max-width: 450px; /* Sedikit lebih lebar */
+    }
+    /* Penting: Override modal-box yang padding:0 agar jadi 25px khusus konfirmasi */
+    .modal-box.confirm-box {
+        padding: 25px;
+    }
+</style>
+
+<div class="mb-2">
+    <h2 style="color: var(--primary-dark);">Pengaturan Sistem</h2>
+    <p style="color: var(--text-grey);">Kelola User, Menu, dan Setting Global.</p>
+</div>
+
+<!-- Toggle PPDB -->
+<div class="settings-card mb-2" style="display: flex; align-items: center; justify-content: space-between;">
+    <div>
+        <h3 style="margin: 0; font-size: 1rem; color: var(--text-dark);">Status Pendaftaran</h3>
+        <small id="ppdb-text" style="color: var(--text-grey); font-weight: 500;">Memuat...</small>
+    </div>
+    <label class="ios-switch">
+        <input type="checkbox" id="ppdb-toggle">
+        <span class="ios-slider"></span>
+    </label>
+</div>
+
+<!-- Area Data -->
+<div class="settings-grid">
+    <!-- Tabel User -->
+    <div class="settings-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h4 style="margin:0;">Data User</h4>
+            <button class="btn btn-primary" style="font-size: 12px; padding: 6px 12px;" id="btn-open-user">+ User</button>
+        </div>
+        <div style="max-height: 300px; overflow-y: auto;">
+            <table>
+                <thead><tr><th>Data User</th><th>Role</th><th style="text-align:right">Aksi</th></tr></thead>
+                <tbody id="body-user">Loading...</tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Tabel Menu -->
+    <div class="settings-card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+            <h4 style="margin:0;">Data Menu</h4>
+            <button class="btn btn-primary" style="font-size: 12px; padding: 6px 12px;" id="btn-open-menu">+ Menu</button>
+        </div>
+        <div style="max-height: 300px; overflow-y: auto;">
+            <table>
+                <thead><tr><th>Nama Menu</th><th>Sumber</th><th style="text-align:right">Aksi</th></tr></thead>
+                <tbody id="body-menu">Loading...</tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL USER -->
+<div class="modal-overlay" id="modal-user">
+    <div class="modal-box">
+        <div class="modal-header"><span id="title-user">Tambah User</span><span class="close-modal" data-target="modal-user">&times;</span></div>
+        <div class="modal-body">
+            <form id="form-user">
+                <input type="hidden" id="u-id">
+                <input type="text" id="u-username" class="form-control" placeholder="Username" required>
+                <input type="password" id="u-password" class="form-control" placeholder="Password (Kosongkan jika tidak ubah)" style="margin-top:10px;">
+                <input type="text" id="u-nama" class="form-control" placeholder="Nama Lengkap" required style="margin-top:10px;">
+                <select id="u-role" class="form-control" style="margin-top:10px;"><option value="staf">Staf</option><option value="guru">Guru</option><option value="admin">Admin</option></select>
+                <div style="margin-top:10px; display:flex; align-items:center; gap:10px;">
+                    <label>Status:</label>
+                    <select id="u-status" class="form-control"><option value="active">Active</option><option value="inactive">Inactive</option></select>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top:20px;">Simpan User</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL MENU (Updated with Segment Buttons) -->
+<div class="modal-overlay" id="modal-menu">
+    <div class="modal-box">
+        <div class="modal-header"><span id="title-menu">Tambah Menu</span><span class="close-modal" data-target="modal-menu">&times;</span></div>
+        <div class="modal-body">
+            <form id="form-menu">
+                <input type="hidden" id="m-id">
+                <input type="text" id="m-label" class="form-control" placeholder="Nama Menu (Contoh: Data Santri)" required>
+
+                <!-- Icon Picker -->
+                <div style="margin-top:10px;">
+                    <label>Ikon Menu</label>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="hidden" id="m-icon" required>
+                        <button type="button" id="btn-pick-icon" class="btn btn-secondary" style="flex:1; text-align:left; background:white; border: 1px solid #eee;">
+                            <span id="icon-preview-display" style="margin-right:10px;"></span> 
+                            <span id="icon-text-display">Pilih Ikon...</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Segment Buttons (Pengganti Radio) -->
+                <div style="margin-top:15px;">
+                    <label style="font-weight:600;">Sumber Konten:</label>
+                    <div class="segment-container">
+                        <button type="button" class="segment-btn active" data-value="internal">Internal</button>
+                        <button type="button" class="segment-btn" data-value="external">External</button>
+                    </div>
+                </div>
+
+                <!-- Container Internal -->
+                <div id="div-internal" style="margin-top:15px;">
+                    <label>Pilih File HTML:</label>
+                    <div style="display:flex; gap:10px;">
+                        <select id="m-file-list" class="form-control" style="flex:1;"><option value="">Memuat...</option></select>
+                        <button type="button" id="btn-refresh-files" class="btn btn-secondary"><i class="fa-solid fa-sync-alt"></i></button>
+                    </div>
+                </div>
+
+                <!-- Container External -->
+                <div id="div-external" style="margin-top:15px; display:none;">
+                    <input type="text" id="m-url-manual" class="form-control" placeholder="https://link-website.com">
+                    <div style="display:flex; align-items:center; gap:10px; margin-top:10px;">
+                        <label style="white-space:nowrap;">Target:</label>
+                        <select id="m-target" class="form-control">
+                            <option value="tab_new">Buka di Tab Baru</option>
+                            <option value="iframe">Buka di Konten (Iframe)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Akses & Status -->
+                <div style="margin-top:15px;">
+                     <label>Akses Role:</label>
+                     <select id="m-access" class="form-control">
+                        <option value="all">Semua Role</option>
+                        <option value="admin">Hanya Admin</option>
+                        <option value="staf,guru">Staf & Guru</option>
+                     </select>
+                </div>
+
+                <div style="margin-top:10px; display:flex; align-items:center; gap:10px;">
+                    <label>Status:</label>
+                    <select id="m-status" class="form-control"><option value="active">Active</option><option value="inactive">Inactive</option></select>
+                </div>
+
+                <button type="submit" class="btn btn-primary btn-block" style="margin-top:20px;">Simpan Menu</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ICON PICKER -->
+<div class="modal-overlay" id="modal-icon-picker">
+    <div class="modal-box" style="max-width: 350px;">
+        <div class="modal-header">Pilih Ikon <span class="close-modal" data-target="modal-icon-picker">&times;</span></div>
+        <div class="modal-body">
+            <div id="icon-picker-grid" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; max-height: 300px; overflow-y: auto;"></div>
+        </div>
+    </div>
+</div>

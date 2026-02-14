@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - SIM PPDA</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+</head>
+<body class="login-body">
+
+    <!-- Loader -->
+    <div id="app-loader" class="hidden"></div>
+    <div id="toast-container"></div>
+
+    <!-- Background Animasi (Floating Shapes) -->
+    <div class="floating-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- Kartu Login (Glassmorphism) -->
+    <div class="glass-card slide-up">
+        
+        <!-- Logo Header -->
+        <div class="login-header-modern">
+            <div class="icon-wrapper-modern">
+                <img src="https://i.imgur.com/NRWyIbT.png" alt="Logo" style="width: 40px; height: 40px; filter: brightness(0) invert(1);">
+            </div>
+            <h2>SIM PPDA</h2>
+            <p>Sistem Informasi Pondok Pesantren</p>
+        </div>
+
+        <form id="loginForm" class="modern-form">
+            <!-- Input Username -->
+            <div class="form-group-modern">
+                <label>Username</label>
+                <div class="input-modern-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="username" placeholder="Masukkan username" required>
+                </div>
+            </div>
+
+            <!-- Input Password -->
+            <div class="form-group-modern">
+                <label>Password</label>
+                <div class="input-modern-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" placeholder="Masukkan password" required>
+                    <button type="button" id="toggle-password" class="toggle-modern-btn">
+                        <i class="fa-solid fa-eye"></i>
+                    </button>
+                </div>
+            </div>
+
+            <button type="submit" id="btn-login" class="btn-modern">
+                <span id="btn-text">Masuk</span>
+                <i id="btn-spinner" class="fa-solid fa-spinner fa-spin hidden"></i>
+            </button>
+        </form>
+        
+        <!-- Success Message (Hidden by default) -->
+        <div id="success-message" class="success-box hidden">
+            <div class="success-icon"><i class="fa-solid fa-check"></i></div>
+            <div>
+                <p style="font-weight: 600; color: var(--primary-dark);">Login Berhasil!</p>
+                <p style="font-size: 12px; color: var(--text-grey);">Anda akan dialihkan...</p>
+            </div>
+        </div>
+        
+        <div class="login-footer">
+            <small>&copy; 2026 PP Daruttauhid Al Alawi</small>
+        </div>
+    </div>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/core.js"></script>
+</body>
+</html>
